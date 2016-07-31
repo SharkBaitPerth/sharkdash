@@ -12,7 +12,8 @@ L.AwesomeMarkers.Icon.prototype.options.prefix = 'fa';
 
 var dummyMarker = L.AwesomeMarkers.icon({
   icon: 'check',
-  markerColor: 'green'
+  markerColor: 'gray',
+	extraClasses: 'icon-dummy'
 });
 
 var greenMarker = L.AwesomeMarkers.icon({

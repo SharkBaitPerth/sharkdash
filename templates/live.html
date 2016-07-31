@@ -118,6 +118,7 @@ function onMessageArrived(message) {
     var content = "Status: Red";
     cottesloe.setIcon(redMarker)
   }
+	$( ".icon-active" ).effect( "bounce", "slow" );
   var datetime = new Date()
   $( "#log-content" ).append( "<li>" + content + ", Occurred: " + datetime.toString() + "</li>" );
 }
