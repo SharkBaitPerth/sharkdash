@@ -8,5 +8,21 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=p
   id: 'mapbox.light'
 }).addTo(map);
 
-var cottesloe = L.marker([-31.996, 115.7431]).addTo(map);
-cottesloe.bindPopup('Cottesloe');
+L.AwesomeMarkers.Icon.prototype.options.prefix = 'fa';
+
+var greenMarker = L.AwesomeMarkers.icon({
+    icon: 'check',
+    markerColor: 'green'
+  });
+
+var orangeMarker = L.AwesomeMarkers.icon({
+    icon: 'exclamation',
+    markerColor: 'orange'
+  });
+
+var redMarker = L.AwesomeMarkers.icon({
+    icon: 'exclamation-triangle',
+    markerColor: 'red'
+  });
+
+var cottesloe = L.marker([-31.996, 115.7431], {icon: greenMarker}).addTo(map);

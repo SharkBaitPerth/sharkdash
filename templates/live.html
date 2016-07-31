@@ -9,6 +9,8 @@
   <meta name="author" content="">
 
   <link rel="stylesheet" href="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css" />
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
   <!--[if lt IE 9]>
@@ -23,26 +25,44 @@
   <div class="row" id="sign">
     <div class="one-half column" id="info">
       <h3>Sign Info</h3>
-      <ul id="info-content"></ul>
+      <div id="info-content">
+        <h4>Cottesloe</h4>
+	<p>
+	  Lat: -31.996<br/>
+          Long: 115.7431
+	</p>
+  <div class="row" id="buttons">
+    <button id="submit-green">CODE GREEN!</button>
+    <button id="submit-orange">CODE ORANGE!</button>
+    <button id="submit-red">CODE RED!</button>
+  </div>
+      </div>
     </div>
     <div class="one-half column" id="log">
       <h3>Sign History</h3>
       <ul id="log-content"></ul>
     </div>
   </div>
-  <div class="row" id="buttons">
-    <button id="submit-green">CODE GREEN!</button>
-    <button id="submit-orange">CODE ORANGE!</button>
-    <button id="submit-red">CODE RED!</button>
-  </div>
 
   <script src="https://code.jquery.com/jquery-3.1.0.js" integrity="sha256-slogkvB1K3VOkzAI8QITxV3VzpOnkeNVsKvtkYLMjfk=" crossorigin="anonymous"></script>
   <script src="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
   <script src="{{ url_for('static', filename='map.js') }}"></script>
   <script>
+// guid for web users
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}
+
 // Create a client instance
-client = new Paho.MQTT.Client('52.62.201.125', 8080, '', "clientId1");
+client = new Paho.MQTT.Client('52.62.201.125', 8080, '', guid());
 
 // set callback handlers
 client.onConnectionLost = onConnectionLost;
@@ -86,14 +106,18 @@ function onMessageArrived(message) {
   console.log("onMessageArrived:"+message.payloadString);
   if (message.payloadString === "0") {
     var content = "Status: Green";
+    cottesloe.setIcon(greenMarker)
   }
   else if (message.payloadString === "1") {
     var content = "Status: Orange";
+    cottesloe.setIcon(orangeMarker)
   }
   else if (message.payloadString === "2") {
     var content = "Status: Red";
+    cottesloe.setIcon(redMarker)
   }
-  $( "#log-content" ).append( "<li>" + content + "</li>" );
+  var datetime = new Date()
+  $( "#log-content" ).append( "<li>" + content + ", Occured: " + datetime.toString() + "</li>" );
 }
   </script>
 </body>
