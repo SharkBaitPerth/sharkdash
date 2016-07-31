@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -44,8 +44,16 @@ class SharkSignHistory(db.Model):
 
 
 @app.route("/")
-def hello():
-    return "Hello World!"
+def home():
+    return render_template('home.html')
+
+@app.route("/live")
+def live():
+    return render_template('live.html')
+
+@app.route("/history")
+def history():
+    return render_template('history.html')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8000, debug=True)

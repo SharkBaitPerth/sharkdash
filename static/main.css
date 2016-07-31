@@ -1,0 +1,25 @@
+h1 {
+  text-align: center;
+}
+
+#map {
+  height: 400px;
+}
+
+#info {
+  background: #EEE;
+  border: 1px solid grey;
+}
+#log {
+  background: #EEE;
+  border: 1px solid grey;
+}
+
+#sign {
+  text-align: center;
+  padding: 10px 0;
+}
+
+#buttons {
+  text-align: center;
+}

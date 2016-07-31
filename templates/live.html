@@ -1,0 +1,100 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Live</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <link rel="stylesheet" href="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  <div class="container">
+  <h1>SharkBait: Project Trident</h1>
+  <div id="map"></div>
+  <div class="row" id="sign">
+    <div class="one-half column" id="info">
+      <h3>Sign Info</h3>
+      <ul id="info-content"></ul>
+    </div>
+    <div class="one-half column" id="log">
+      <h3>Sign History</h3>
+      <ul id="log-content"></ul>
+    </div>
+  </div>
+  <div class="row" id="buttons">
+    <button id="submit-green">CODE GREEN!</button>
+    <button id="submit-orange">CODE ORANGE!</button>
+    <button id="submit-red">CODE RED!</button>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.1.0.js" integrity="sha256-slogkvB1K3VOkzAI8QITxV3VzpOnkeNVsKvtkYLMjfk=" crossorigin="anonymous"></script>
+  <script src="https://npmcdn.com/leaflet@1.0.0-rc.2/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
+  <script src="{{ url_for('static', filename='map.js') }}"></script>
+  <script>
+// Create a client instance
+client = new Paho.MQTT.Client('52.62.201.125', 8080, '', "clientId1");
+
+// set callback handlers
+client.onConnectionLost = onConnectionLost;
+client.onMessageArrived = onMessageArrived;
+
+// connect the client
+client.connect({onSuccess:onConnect});
+
+// called when the client connects
+function onConnect() {
+  // Once a connection has been made, make a subscription and send a message.
+  console.log("onConnect");
+  client.subscribe("BEACON/1");
+
+  $( "#submit-green" ).click(function() {
+    message = new Paho.MQTT.Message("0");
+    message.destinationName = "BEACON/1";
+    client.send(message);
+  });
+  $( "#submit-orange" ).click(function() {
+    message = new Paho.MQTT.Message("1");
+    message.destinationName = "BEACON/1";
+    client.send(message);
+  });
+  $( "#submit-red" ).click(function() {
+    message = new Paho.MQTT.Message("2");
+    message.destinationName = "BEACON/1";
+    client.send(message);
+  });
+}
+
+// called when the client loses its connection
+function onConnectionLost(responseObject) {
+  if (responseObject.errorCode !== 0) {
+    console.log("onConnectionLost:"+responseObject.errorMessage);
+  }
+}
+
+// called when a message arrives
+function onMessageArrived(message) {
+  console.log("onMessageArrived:"+message.payloadString);
+  if (message.payloadString === "0") {
+    var content = "Status: Green";
+  }
+  else if (message.payloadString === "1") {
+    var content = "Status: Orange";
+  }
+  else if (message.payloadString === "2") {
+    var content = "Status: Red";
+  }
+  $( "#log-content" ).append( "<li>" + content + "</li>" );
+}
+  </script>
+</body>
+</html>
